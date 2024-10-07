@@ -896,7 +896,7 @@ update_sh() {
 
 update_sh
 echo && echo -e "                 gost 一键安装配置脚本"${Red_font_prefix}[${shell_version}]${Font_color_suffix}"
-  ----------- KANIKIG -----------
+  ----------- 修改by：Azimi  gost版本v2.11.5-----------
   特性: (1)本脚本采用systemd及gost配置文件对gost进行管理
         (2)能够在不借助其他工具(如screen)的情况下实现多条转发规则同时生效
         (3)机器reboot后转发不失效
