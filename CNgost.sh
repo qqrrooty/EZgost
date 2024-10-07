@@ -63,7 +63,7 @@ function check_root() {
 }
 function check_new_ver() {
   # deprecated
-  ct_new_ver=$(wget --no-check-certificate -qO- -t2 -T3 https://ghp.ci/api.github.com/repos/ginuerzh/gost/releases/latest | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
+  ct_new_ver=$(wget --no-check-certificate -qO- -t2 -T3 https://ghp.ci/https://api.github.com/repos/ginuerzh/gost/releases/latest | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g;s/v//g')
   if [[ -z ${ct_new_ver} ]]; then
     ct_new_ver="2.11.5"
     echo -e "${Error} gost 最新版本获取失败，正在下载v${ct_new_ver}版"
@@ -97,13 +97,13 @@ function Install_ct() {
   [[ -z ${addyn} ]] && addyn="n"
   if [[ ${addyn} == [Yy] ]]; then
     rm -rf gost-linux-"$bit"-"$ct_new_ver".gz
-    wget --no-check-certificate https://ghp.ci/github.com/ginuerzh/gost/releases/download/v"$ct_new_ver"/gost-linux-"$bit"-"$ct_new_ver".gz
+    wget --no-check-certificate https://ghp.ci/https://github.com/ginuerzh/gost/releases/download/v"$ct_new_ver"/gost-linux-"$bit"-"$ct_new_ver".gz
     gunzip gost-linux-"$bit"-"$ct_new_ver".gz
     mv gost-linux-"$bit"-"$ct_new_ver" gost
     mv gost /usr/bin/gost
     chmod -R 777 /usr/bin/gost
-    wget --no-check-certificate https://ghp.ci/raw.githubusercontent.com/KANIKIG/Multi-EasyGost/master/gost.service && chmod -R 777 gost.service && mv gost.service /usr/lib/systemd/system
-    mkdir /etc/gost && wget --no-check-certificate https://ghp.ci/raw.githubusercontent.com/KANIKIG/Multi-EasyGost/master/config.json && mv config.json /etc/gost && chmod -R 777 /etc/gost
+    wget --no-check-certificate https://ghp.ci/https://raw.githubusercontent.com/KANIKIG/Multi-EasyGost/master/gost.service && chmod -R 777 gost.service && mv gost.service /usr/lib/systemd/system
+    mkdir /etc/gost && wget --no-check-certificate https://ghp.ci/https://raw.githubusercontent.com/KANIKIG/Multi-EasyGost/master/config.json && mv config.json /etc/gost && chmod -R 777 /etc/gost
   else
     rm -rf gost-linux-"$bit"-"$ct_new_ver".gz
     wget --no-check-certificate https://github.com/ginuerzh/gost/releases/download/v"$ct_new_ver"/gost-linux-"$bit"-"$ct_new_ver".gz
@@ -834,53 +834,37 @@ function show_all_conf() {
 
 cron_restart() {
   echo -e "------------------------------------------------------------------"
-  echo -e "gost 定时重启任务: "
+  echo -e "gost定时重启任务: "
   echo -e "-----------------------------------"
-  echo -e "[1] 配置 gost 定时重启任务"
-  echo -e "[2] 删除 gost 定时重启任务"
+  echo -e "[1] 配置gost定时重启任务"
+  echo -e "[2] 删除gost定时重启任务"
   echo -e "-----------------------------------"
   read -p "请选择: " numcron
-  
   if [ "$numcron" == "1" ]; then
     echo -e "------------------------------------------------------------------"
-    echo -e "gost 定时重启任务类型: "
+    echo -e "gost定时重启任务类型: "
     echo -e "-----------------------------------"
-    echo -e "[1] 每 ? 小时重启"
-    echo -e "[2] 每日 ? 点重启"
+    echo -e "[1] 每？小时重启"
+    echo -e "[2] 每日？点重启"
     echo -e "-----------------------------------"
     read -p "请选择: " numcrontype
-    
     if [ "$numcrontype" == "1" ]; then
       echo -e "-----------------------------------"
-      read -p "每 ? 小时重启: " cronhr
-      
-      if [[ "$cronhr" =~ ^[0-9]+$ ]] && [ "$cronhr" -gt 0 ]; then
-        echo "0 */$cronhr * * * systemctl restart gost" >> /etc/crontab
-        echo -e "定时重启设置成功！"
-      else
-        echo "请输入有效的小时数！"
-      fi
-      
+      read -p "每？小时重启: " cronhr
+      echo "0 0 */$cronhr * * ? * systemctl restart gost" >>/etc/crontab
+      echo -e "定时重启设置成功！"
     elif [ "$numcrontype" == "2" ]; then
       echo -e "-----------------------------------"
-      read -p "每日 ? 点重启 (0-23): " cronhr
-      
-      if [[ "$cronhr" =~ ^[0-9]+$ ]] && [ "$cronhr" -ge 0 ] && [ "$cronhr" -le 23 ]; then
-        echo "0 $cronhr * * * systemctl restart gost" >> /etc/crontab
-        echo -e "定时重启设置成功！"
-      else
-        echo "请输入有效的时间（0-23）！"
-      fi
-      
+      read -p "每日？点重启: " cronhr
+      echo "0 0 $cronhr * * ? systemctl restart gost" >>/etc/crontab
+      echo -e "定时重启设置成功！"
     else
       echo "输入错误，请重试"
       exit
     fi
-    
   elif [ "$numcron" == "2" ]; then
     sed -i "/gost/d" /etc/crontab
     echo -e "定时重启任务删除完成！"
-    
   else
     echo "输入错误，请重试"
     exit
@@ -888,14 +872,14 @@ cron_restart() {
 }
 
 update_sh() {
-  ol_version=$(curl -L -s --connect-timeout 5 https://ghp.ci/raw.githubusercontent.com/qqrrooty/EZgost/master/gost.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
+  ol_version=$(curl -L -s --connect-timeout 5 https://ghp.ci/https://raw.githubusercontent.com/qqrrooty/EZgost/master/gost.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
   if [ -n "$ol_version" ]; then
     if [[ "$shell_version" != "$ol_version" ]]; then
       echo -e "存在新版本，是否更新 [Y/N]?"
       read -r update_confirm
       case $update_confirm in
       [yY][eE][sS] | [yY])
-        wget -N --no-check-certificate https://ghp.ci/raw.githubusercontent.com/qqrrooty/EZgost/master/gost.sh
+        wget -N --no-check-certificate https://ghp.ci/https://raw.githubusercontent.com/qqrrooty/EZgost/master/gost.sh
         echo -e "更新完成"
         exit 0
         ;;
