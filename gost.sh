@@ -851,22 +851,22 @@ cron_restart() {
     if [ "$numcrontype" == "1" ]; then
       echo -e "-----------------------------------"
       read -p "每？小时重启: " cronhr
-      echo "0 0 */$cronhr * * ? * systemctl restart gost" >>/etc/crontab
+      echo "0 */$cronhr * * * systemctl restart gost" >>/etc/crontab
       echo -e "定时重启设置成功！"
     elif [ "$numcrontype" == "2" ]; then
       echo -e "-----------------------------------"
       read -p "每日？点重启: " cronhr
-      echo "0 0 $cronhr * * ? systemctl restart gost" >>/etc/crontab
+      echo "0 $cronhr * * * systemctl restart gost" >>/etc/crontab
       echo -e "定时重启设置成功！"
     else
-      echo "type error, please try again"
+      echo "输入错误，请重试"
       exit
     fi
   elif [ "$numcron" == "2" ]; then
     sed -i "/gost/d" /etc/crontab
     echo -e "定时重启任务删除完成！"
   else
-    echo "type error, please try again"
+    echo "输入错误，请重试"
     exit
   fi
 }
