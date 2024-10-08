@@ -135,6 +135,7 @@ function Uninstall_ct() {
   rm -rf /usr/lib/systemd/system/gost.service
   rm -rf /etc/gost
   rm -rf "$(pwd)"/gost.sh
+  sed -i "/gost/d" /etc/crontab
   echo "gost已经成功删除"
 }
 function Start_ct() {
